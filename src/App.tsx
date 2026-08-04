@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Shirt, Loader2, AlertCircle } from 'lucide-react';
+import { sendMessage as sendDifyMessage } from './lib/difyClient';
 
 type Message = {
   id: number;
@@ -7,6 +8,9 @@ type Message = {
   sender: 'me' | 'other';
   time: string;
 };
+
+const CONVERSATION_ID_KEY = 'furugi-chat-conversation-id';
+const MESSAGES_KEY = 'furugi-chat-messages';
 
 function formatTime(date: Date) {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -17,24 +21,23 @@ const initialMessages: Message[] = [
   { id: 2, text: '好みのスタイルや予算を教えてくださいね。', sender: 'other', time: '10:00' },
 ];
 
-/**
- * ダミーのBot返答生成。
- * 後で実際のAPI呼び出しに差し替える際は、この関数の中身だけを置き換えればよい。
- * Promise<string> を返すので、非同期API呼び出しにそのまま移行できる。
- */
-function fetchBotReply(userText: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // ダミー返答
-      resolve(`「${userText}」ですね！古着っぽくまとめるコツをお伝えしますね。`);
-      // エラー動作を確認したい場合は以下のコメントを外してください
-      // reject(new Error('APIとの通信に失敗しました。'));
-    }, 1000);
-  });
+function loadMessages(): Message[] {
+  const stored = localStorage.getItem(MESSAGES_KEY);
+  if (!stored) return initialMessages;
+  try {
+    return JSON.parse(stored) as Message[];
+  } catch {
+    return initialMessages;
+  }
+}
+
+function loadConversationId(): string {
+  return localStorage.getItem(CONVERSATION_ID_KEY) ?? '';
 }
 
 function App() {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<Message[]>(loadMessages);
+  const [conversationId, setConversationId] = useState<string>(loadConversationId);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +51,14 @@ function App() {
   useEffect(() => {
     if (!isSending) inputRef.current?.focus();
   }, [isSending]);
+
+  useEffect(() => {
+    localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
+  }, [messages]);
+
+  useEffect(() => {
+    localStorage.setItem(CONVERSATION_ID_KEY, conversationId);
+  }, [conversationId]);
 
   const sendMessage = async () => {
     const trimmed = input.trim();
@@ -65,14 +76,15 @@ function App() {
     setError(null);
 
     try {
-      const replyText = await fetchBotReply(trimmed);
+      const result = await sendDifyMessage(trimmed, conversationId);
       const reply: Message = {
         id: Date.now() + 1,
-        text: replyText,
+        text: result.answer,
         sender: 'other',
         time: formatTime(new Date()),
       };
       setMessages((prev) => [...prev, reply]);
+      setConversationId(result.conversationId);
     } catch (err) {
       const message = err instanceof Error ? err.message : '予期しないエラーが発生しました。';
       setError(message);
