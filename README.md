@@ -68,12 +68,16 @@
 
 1. リポジトリを取得
 
-- git clone [リポジトリのURL]
-- cd furugi-chatbot
+```
+git clone [リポジトリのURL]
+cd furugi-chatbot
+```
 
 2. 依存パッケージのインストール
 
-- npm install
+```
+npm install
+```
 
 インストールには1〜3分かかります。
 
@@ -81,8 +85,10 @@
 
 プロジェクトのルート直下に .env.local ファイルを新規作成し、以下の内容を記述します。
 
-- VITE_DIFY_API_KEY=app-XXXXXXXXXXXXXXXXXX
-- VITE_DIFY_API_URL=https://api.dify.ai/v1
+```
+VITE_DIFY_API_KEY=app-XXXXXXXXXXXXXXXXXX
+VITE_DIFY_API_URL=https://api.dify.ai/v1
+```
 
 VITE_DIFY_API_KEY: Difyダッシュボードで発行したAPIキー(app- で始まる文字列)
 VITE_DIFY_API_URL: Difyクラウド版の共通エンドポイントURL
@@ -95,7 +101,9 @@ VITE_DIFY_API_URL: Difyクラウド版の共通エンドポイントURL
 
 4. 開発サーバー起動
 
-- npm run dev
+```
+npm run dev
+```
 
 http://localhost:5173/ にブラウザでアクセスして動作確認します。
 
