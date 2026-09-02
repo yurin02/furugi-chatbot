@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Shirt, Loader2, AlertCircle, Sparkles } from 'lucide-react';
+import { Send, Shirt, Loader2, AlertCircle } from 'lucide-react';
 import { sendMessage as sendDifyMessage } from './lib/difyClient';
+import SampleQuestions from './components/SampleQuestions';
 
 type Message = {
   id: number;
@@ -19,15 +20,6 @@ function formatTime(date: Date) {
 const initialMessages: Message[] = [
   { id: 1, text: 'こんにちは！古着コーデの相談ならお任せください。', sender: 'other', time: '10:00' },
   { id: 2, text: '好みのスタイルや予算を教えてくださいね。', sender: 'other', time: '10:00' },
-];
-
-const SAMPLE_QUESTIONS: string[] = [
-  '白いTシャツに合う古着のボトムスを教えて',
-  '秋のデートにおすすめの古着コーデを3案',
-  '30代男性のカジュアル古着スタイル',
-  '予算1万円で作れる古着コーデ',
-  '初めての古着挑戦、何から始めるべき？',
-  '90年代っぽさを出せる古着アイテムは？',
 ];
 
 function loadMessages(): Message[] {
@@ -183,24 +175,7 @@ function App() {
 
           {/* Sample questions */}
           {showSampleQuestions && (
-            <div className="mt-2 rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-sky-50 p-4 shadow-sm">
-              <div className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-amber-700">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>こんな質問はいかがですか？</span>
-              </div>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {SAMPLE_QUESTIONS.map((question) => (
-                  <button
-                    key={question}
-                    onClick={() => sendMessage(question)}
-                    disabled={isSending}
-                    className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-left text-sm text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md hover:shadow-amber-200/40 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {question}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <SampleQuestions onSelect={sendMessage} disabled={isSending} />
           )}
         </div>
       </div>
