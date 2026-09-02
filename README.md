@@ -35,6 +35,7 @@
 - 会話文脈の保持(前の会話を踏まえた返答)
 - ブラウザリロード後も会話履歴を継続(localStorage による永続化)
 - 送信中のローディング表示、エラー時の視覚的フィードバック
+- 会話開始前のサンプル質問ボタン(タップで質問を送信、一度会話が始まると自動的に非表示)
 
 ## 使用技術
 
@@ -65,6 +66,8 @@
 
 - src/App.tsx — メインのReactコンポーネント、状態管理
 - src/lib/difyClient.ts — Dify API通信の専用モジュール
+- src/components/SampleQuestions.tsx — サンプル質問ボタン群のUIコンポーネント
+- src/data/sampleQuestions.ts — サンプル質問文の一覧(文言変更はここだけで完結)
 - .env.local — 環境変数(APIキー、URL)※ Gitignore対象
 - docs/ — 開発ドキュメント(フェーズごとの記録)
 
