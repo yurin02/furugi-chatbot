@@ -190,6 +190,7 @@ http://localhost:5173/ にブラウザでアクセスして動作確認します
 - docs/01-dify-and-bolt.md — Difyアプリ作成〜BoltでのUI構築まで
 - docs/02-bolt-to-cursor.md — GitHub経由でのCursor環境移行
 - docs/03-api-integration.md — Dify APIとの連携実装
+- docs/04-sample-questions.md — サンプル質問ボタンの追加
 
 ## プロジェクトの位置づけ
 
